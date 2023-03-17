@@ -65,11 +65,19 @@ const GameController = (() => {
 
 const DisplayController = (() => {
 	const board = document.querySelector(".game-board");
+	const gameEndDiv = document.querySelector(".game-end");
 
 	const endGame = (state) => {
 		const endText = document.createElement("p");
+		const restartBtn = document.createElement("button");
+
 		endText.innerHTML = state === "DRAW" ? "Draw, nobody wins" : `${state} wins!`;
-		board.after(endText);
+		restartBtn.innerHTML = "Restart";
+
+		restartBtn.onclick = reset;
+
+		gameEndDiv.appendChild(endText);
+		gameEndDiv.appendChild(restartBtn);
 	};
 	const updateBoard = () => {
 		const tiles = board.children;
@@ -80,6 +88,7 @@ const DisplayController = (() => {
 
 	const renderBoard = () => {
 		board.innerHTML = "";
+		gameEndDiv.innerHTML = "";
 		for (let i = 0; i < TILE_COUNT; i += 1) {
 			const tile = document.createElement("div");
 			const symbol = document.createElement("p");
