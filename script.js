@@ -66,8 +66,11 @@ const GameController = (() => {
 const DisplayController = (() => {
 	const board = document.querySelector(".game-board");
 	const gameEndDiv = document.querySelector(".game-end");
+	let gameEnded = false;
 
 	const endGame = (state) => {
+		gameEnded = true;
+
 		const endText = document.createElement("p");
 		const restartBtn = document.createElement("button");
 
@@ -86,9 +89,13 @@ const DisplayController = (() => {
 		}
 	};
 
-	const renderBoard = () => {
+	const resetBoard = () => {
 		board.innerHTML = "";
 		gameEndDiv.innerHTML = "";
+		gameEnded = false;
+	};
+
+	const renderBoard = () => {
 		for (let i = 0; i < TILE_COUNT; i += 1) {
 			const tile = document.createElement("div");
 			const symbol = document.createElement("p");
@@ -99,7 +106,7 @@ const DisplayController = (() => {
 			tile.classList.add("tile");
 
 			tile.onclick = (e) => {
-				if (e.target.firstChild.innerHTML === "") {
+				if (e.target.firstChild.innerHTML === "" && gameEnded === false) {
 					GameBoard.setSymbol(i, GameController.getSymbol());
 					updateBoard();
 					GameController.takeTurn();
@@ -111,12 +118,13 @@ const DisplayController = (() => {
 		}
 	};
 
-	return { renderBoard, endGame };
+	return { renderBoard, resetBoard, endGame };
 })();
 
 function reset() {
 	GameBoard.resetBoard();
 	GameController.resetLogic();
+	DisplayController.resetBoard();
 	DisplayController.renderBoard();
 }
 
